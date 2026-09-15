@@ -45,19 +45,25 @@ export default function RootLayout({
               </div>
             </a>
 
-            <nav className="flex items-center gap-3 text-sm">
+            <nav className="flex items-center gap-2.5 text-sm">
               <a
                 href="/search"
-                className="px-3.5 py-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 font-medium transition-colors"
+                className="px-3 py-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 font-medium transition-colors text-xs sm:text-sm"
               >
                 🔍 기록 조회
               </a>
               <div className="w-px h-4 bg-slate-200"></div>
               <a
-                href="/court/login"
-                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-xs shadow-sm hover:shadow transition-all"
+                href="/court/register"
+                className="px-3 py-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 font-semibold text-xs transition-colors"
               >
-                <span>법원 공무원 전용</span>
+                🏛️ 공무원 회원가입
+              </a>
+              <a
+                href="/court/login"
+                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-lg font-semibold text-xs shadow-sm hover:shadow transition-all"
+              >
+                <span>로그인</span>
                 <span className="opacity-70">→</span>
               </a>
             </nav>

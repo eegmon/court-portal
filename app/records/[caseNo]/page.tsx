@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
+import { toCamel, toPublicCase } from "@/lib/utils";
 
 interface ExpungementInfo {
   isExpunged: boolean;
@@ -57,15 +59,36 @@ function DataRow({ label, value, highlight }: { label: string; value?: string | 
 }
 
 async function getCaseDetail(caseNo: string): Promise<CaseDetail | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const decoded = decodeURIComponent(caseNo).trim();
+
   try {
-    const res = await fetch(`${baseUrl}/api/records/${caseNo}`, {
-      cache: "no-store",
+    const result = await db.execute({
+      sql: `SELECT id, hyeongje_no, latest_hyeongje_no, suje_no, suspect_name, charge_name,
+                   court1_no, court1_result, court1_doc,
+                   court2_no, court2_result, court2_doc,
+                   court3_no, court3_result, court3_doc,
+                   disposition, execution_status, execution_date, execution_notes,
+                   is_expunged, expunged_at, expunged_reason,
+                   booking_date, created_at
+            FROM cases
+            WHERE (
+              id = ?
+              OR court3_no = ? OR court2_no = ? OR court1_no = ?
+              OR latest_hyeongje_no = ? OR hyeongje_no = ? OR suje_no = ?
+            )
+            AND deleted_at = ''
+            LIMIT 1`,
+      args: [decoded, decoded, decoded, decoded, decoded, decoded, decoded],
     });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.case;
-  } catch {
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    const raw = toCamel(result.rows[0] as Record<string, unknown>);
+    return toPublicCase(raw) as CaseDetail;
+  } catch (e) {
+    console.error("[getCaseDetail error]", e);
     return null;
   }
 }

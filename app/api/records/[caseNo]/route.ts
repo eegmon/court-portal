@@ -25,12 +25,13 @@ export async function GET(
                    booking_date, created_at
             FROM cases
             WHERE (
-              court3_no = ? OR court2_no = ? OR court1_no = ?
+              id = ?
+              OR court3_no = ? OR court2_no = ? OR court1_no = ?
               OR latest_hyeongje_no = ? OR hyeongje_no = ? OR suje_no = ?
             )
             AND deleted_at = ''
             LIMIT 1`,
-      args: [decoded, decoded, decoded, decoded, decoded, decoded],
+      args: [decoded, decoded, decoded, decoded, decoded, decoded, decoded],
     });
 
     if (result.rows.length === 0) {
