@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "도스온라인 사법정보 포털 | 대국민 형사사법정보 서비스",
@@ -12,84 +13,107 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className="light">
-      <body className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('theme');
+                const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (theme === 'dark' || (!theme && supportDarkMode)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 flex flex-col antialiased transition-colors duration-200">
         {/* 상단 공식 배너 바 */}
-        <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
-              도스온라인 사법전산망 공식 대외 서비스
+        <div className="bg-slate-900 dark:bg-black text-slate-300 text-xs py-1.5 px-3 sm:px-4 border-b border-slate-800">
+          <div className="max-w-6xl mx-auto flex items-center justify-between text-[11px] sm:text-xs">
+            <span className="flex items-center gap-1.5 sm:gap-2 truncate">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+              <span className="truncate">도스온라인 사법전산망 대외 서비스</span>
             </span>
-            <span className="text-slate-400">실시간 연동 가동 중</span>
+            <span className="text-slate-400 shrink-0 ml-2">실시간 연동</span>
           </div>
         </div>
 
         {/* 네비게이션 헤더 */}
-        <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-xs">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <a href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+        <header className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-2xs">
+          <div className="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
+            <a href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform text-base sm:text-lg">
                 ⚖️
               </div>
               <div>
-                <div className="font-bold text-lg text-slate-900 tracking-tight flex items-center gap-2">
-                  도스온라인 사법정보 포털
-                  <span className="bg-blue-50 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full border border-blue-200">
+                <div className="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5">
+                  <span>사법정보 포털</span>
+                  <span className="hidden sm:inline-block bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
                     대외용
                   </span>
                 </div>
-                <div className="text-[11px] text-slate-400 font-medium -mt-0.5">
-                  Court & Justice Open Service
+                <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium -mt-0.5 hidden xs:block">
+                  Court Open Portal
                 </div>
               </div>
             </a>
 
-            <nav className="flex items-center gap-2.5 text-sm">
+            <nav className="flex items-center gap-1.5 sm:gap-2.5 text-xs sm:text-sm">
               <a
                 href="/search"
-                className="px-3 py-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 font-medium transition-colors text-xs sm:text-sm"
+                className="px-2.5 sm:px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors"
               >
-                🔍 기록 조회
+                🔍 <span className="hidden sm:inline">기록</span> 조회
               </a>
-              <div className="w-px h-4 bg-slate-200"></div>
+              
               <a
                 href="/court/register"
-                className="px-3 py-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 font-semibold text-xs transition-colors"
+                className="hidden md:inline-block px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs transition-colors"
               >
-                🏛️ 공무원 회원가입
+                🏛️ 공무원 가입
               </a>
+
               <a
                 href="/court/login"
-                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-lg font-semibold text-xs shadow-sm hover:shadow transition-all"
+                className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-3.5 py-2 rounded-lg font-bold text-xs shadow-sm hover:shadow transition-all shrink-0"
               >
                 <span>로그인</span>
                 <span className="opacity-70">→</span>
               </a>
+
+              <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-0.5"></div>
+
+              {/* ☀️ / 🌙 다크모드 스위치 */}
+              <ThemeToggle />
             </nav>
           </div>
         </header>
 
         {/* 메인 콘텐츠 영역 */}
-        <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+        <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-6 py-6 sm:py-8">
           {children}
         </main>
 
         {/* 푸터 */}
-        <footer className="border-t border-slate-200 bg-white py-8 text-slate-500 text-xs">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 sm:py-8 text-slate-500 dark:text-slate-400 text-xs">
+          <div className="max-w-6xl mx-auto px-3.5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div>
-              <p className="font-semibold text-slate-700">도스온라인 사법전산 통합망</p>
-              <p className="mt-1 text-slate-400">
-                본 사이트에서 제공되는 모든 조회 기록은 사법 데이터 연계 정책에 따라 실시간 감사 로그에 기록·보관됩니다.
+              <p className="font-semibold text-slate-700 dark:text-slate-300">도스온라인 사법전산 통합망</p>
+              <p className="mt-1 text-slate-400 dark:text-slate-500 text-[11px] leading-relaxed">
+                본 포털에서 제공되는 모든 사건 데이터는 사법 정책에 따라 실시간 감사 로그에 안전하게 기록·보관됩니다.
               </p>
             </div>
-            <div className="flex items-center gap-4 text-slate-400 shrink-0">
-              <span>개인정보 처리방침</span>
+            <div className="flex flex-wrap justify-center items-center gap-3 text-slate-400 dark:text-slate-500 text-[11px] shrink-0">
+              <a href="/court/register" className="hover:text-blue-600 dark:hover:text-blue-400">공무원 가입</a>
               <span>·</span>
-              <span>이용약관</span>
+              <a href="/court/login" className="hover:text-blue-600 dark:hover:text-blue-400">공무원 로그인</a>
               <span>·</span>
-              <span>시스템 문의</span>
+              <a href="/search" className="hover:text-blue-600 dark:hover:text-blue-400">전과 조회</a>
             </div>
           </div>
         </footer>

@@ -195,11 +195,11 @@ export default function CourtCaseEditPage() {
   if (error && !caseData) {
     return (
       <div className="max-w-2xl mx-auto py-12 text-center">
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl p-8">
+        <div className="bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 rounded-2xl p-8">
           <p className="font-bold">{error}</p>
           <a
             href="/court/dashboard"
-            className="mt-4 inline-block text-xs font-semibold text-rose-800 underline"
+            className="mt-4 inline-block text-xs font-semibold text-rose-800 dark:text-rose-400 underline"
           >
             ← 대시보드로 복귀
           </a>
@@ -210,61 +210,61 @@ export default function CourtCaseEditPage() {
 
   return (
     <div className="max-w-3xl mx-auto pb-12">
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <a
           href="/court/dashboard"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-lg shadow-2xs transition-colors"
         >
           ← 공무원 대시보드로 돌아가기
         </a>
       </div>
 
       {/* 사건 요약 카드 */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs mb-6">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xs mb-5 sm:mb-6">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+            <span className="font-mono text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-md border border-blue-200 dark:border-blue-800">
               대표: {caseData?.displayCaseNo}
             </span>
             <span className="text-xs text-slate-400 font-mono">
               (검찰 {caseData?.hyeongjeNo})
             </span>
           </div>
-          <span className="text-xs text-slate-400">
-            피의자: <strong className="text-slate-800 font-bold">{caseData?.suspectName}</strong>
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            피의자: <strong className="text-slate-800 dark:text-slate-200 font-bold">{caseData?.suspectName}</strong>
           </span>
         </div>
-        <div className="text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 mt-3 pt-3 border-t border-slate-100">
-          <div>죄명: <strong className="text-slate-800">{caseData?.chargeName || "미기재"}</strong></div>
-          <div>검찰 처분: <strong className="text-slate-800">{caseData?.disposition || "미기재"}</strong></div>
+        <div className="text-xs text-slate-600 dark:text-slate-400 flex flex-wrap gap-x-4 gap-y-1 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div>죄명: <strong className="text-slate-800 dark:text-slate-200">{caseData?.chargeName || "미기재"}</strong></div>
+          <div>검찰 처분: <strong className="text-slate-800 dark:text-slate-200">{caseData?.disposition || "미기재"}</strong></div>
         </div>
       </div>
 
       {/* 알림 메시지 */}
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 rounded-xl p-4 text-xs font-semibold mb-6 flex items-center gap-2">
+        <div className="bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 rounded-xl p-3.5 sm:p-4 text-xs font-semibold mb-5 sm:mb-6 flex items-center gap-2">
           <span>⚠️</span>
           <span>{error}</span>
         </div>
       )}
       {success && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl p-4 text-xs font-semibold mb-6 flex items-center gap-2">
+        <div className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-xl p-3.5 sm:p-4 text-xs font-semibold mb-5 sm:mb-6 flex items-center gap-2">
           <span>✅</span>
           <span>{success}</span>
         </div>
       )}
 
       {/* 1. 재판 사건번호, 판결 선고 및 판결문 링크 입력 */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs mb-6">
-        <div className="flex items-center gap-2 pb-3 mb-5 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-2xs mb-5 sm:mb-6">
+        <div className="flex items-center gap-2 pb-3 mb-4 sm:mb-5 border-b border-slate-100 dark:border-slate-800">
           <span className="text-xl">⚖️</span>
           <div>
-            <h2 className="font-bold text-slate-900 text-base">법원 사건번호 및 판결문 등록</h2>
-            <p className="text-xs text-slate-400">심급별 법원 사건번호와 선고 결과, 판결문 URL을 등록합니다.</p>
+            <h2 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">법원 사건번호 및 판결문 등록</h2>
+            <p className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500">심급별 법원 사건번호와 선고 결과, 판결문 URL을 등록합니다.</p>
           </div>
         </div>
 
-        <form onSubmit={handleVerdictSave} className="space-y-4">
+        <form onSubmit={handleVerdictSave} className="space-y-3.5 sm:space-y-4">
           {[
             {
               level: "1심 (지방법원)",
@@ -300,51 +300,51 @@ export default function CourtCaseEditPage() {
               valPlaceholder: "예: 상고기각 (확정) / 파기환송",
             },
           ].map(({ level, no, setNo, noPlaceholder, val, setVal, doc, setDoc, valPlaceholder }) => (
-            <div key={level} className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2.5">
-              <div className="font-bold text-xs text-slate-800 flex items-center justify-between">
+            <div key={level} className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-2.5">
+              <div className="font-bold text-xs text-slate-800 dark:text-slate-200 flex items-center justify-between">
                 <span>{level}</span>
-                <span className="text-[11px] text-slate-400 font-normal">법원 사건번호 우선순위 자동 채번</span>
+                <span className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-normal">법원 사건번호 우선순위 채번</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <div>
-                  <label className="block text-[11px] text-slate-500 mb-1">법원 사건번호</label>
+                  <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">법원 사건번호</label>
                   <input
                     value={no}
                     onChange={(e) => setNo(e.target.value)}
                     type="text"
                     placeholder={noPlaceholder}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-500 mb-1">선고 결과</label>
+                  <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">선고 결과</label>
                   <input
                     value={val}
                     onChange={(e) => setVal(e.target.value)}
                     type="text"
                     placeholder={valPlaceholder}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-500 mb-1">판결문 링크 (URL)</label>
+                  <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">판결문 링크 (URL)</label>
                   <input
                     value={doc}
                     onChange={(e) => setDoc(e.target.value)}
                     type="url"
                     placeholder="https://..."
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
             </div>
           ))}
 
-          <div className="pt-2">
+          <div className="pt-1">
             <button
               type="submit"
               disabled={savingVerdict}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-xs shadow-md shadow-blue-600/20 hover:shadow-lg transition-all disabled:opacity-50"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-blue-600/20 hover:shadow-lg transition-all disabled:opacity-50"
             >
               {savingVerdict ? "판결 정보 저장 중..." : "⚖️ 판결 정보 및 판결문 저장"}
             </button>
@@ -353,26 +353,26 @@ export default function CourtCaseEditPage() {
       </div>
 
       {/* 2. 형집행 및 제72조 형의 실효 관리 */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-        <div className="flex items-center gap-2 pb-3 mb-5 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-2xs">
+        <div className="flex items-center gap-2 pb-3 mb-4 sm:mb-5 border-b border-slate-100 dark:border-slate-800">
           <span className="text-xl">🔒</span>
           <div>
-            <h2 className="font-bold text-slate-900 text-base">형집행 및 제72조(형의 실효) 관리</h2>
-            <p className="text-xs text-slate-400">형집행 현황과 법령에 따른 실효 판정 및 수동 실효를 설정합니다.</p>
+            <h2 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">형집행 및 제72조(형의 실효) 관리</h2>
+            <p className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500">형집행 현황과 법령에 따른 실효 판정 및 수동 실효를 설정합니다.</p>
           </div>
         </div>
 
         {/* 제72조 법령 안내 박스 */}
-        <div className="bg-purple-50 border border-purple-200/80 rounded-xl p-4 text-xs text-purple-900 mb-5">
+        <div className="bg-purple-50 dark:bg-purple-950/60 border border-purple-200/80 dark:border-purple-800/80 rounded-xl p-3.5 sm:p-4 text-xs text-purple-900 dark:text-purple-300 mb-5">
           <div className="font-bold mb-1 flex items-center gap-1.5">
             <span>📜</span>
             <span>제72조(형의 실효) 기준 안내</span>
           </div>
-          <p className="text-purple-700 leading-relaxed text-[11px]">
+          <p className="text-purple-700 dark:text-purple-400 leading-relaxed text-[11px]">
             형의 집행 종료/면제일로부터 <strong>5시간 초과 금고·징역: 42일</strong> / <strong>5시간 이하 금고: 28일</strong> / <strong>벌금: 14일</strong> / <strong>구류·과료: 즉시</strong> 경과 시 대국민 검색에서 자동 실효(비공개) 처리됩니다.
           </p>
           {caseData?.expungement && (
-            <div className="mt-2 pt-2 border-t border-purple-200/60 font-semibold text-purple-950">
+            <div className="mt-2 pt-2 border-t border-purple-200/60 dark:border-purple-800/60 font-semibold text-purple-950 dark:text-purple-200">
               {caseData.expungement.isExpunged ? (
                 <span>✅ 현재 상태: 형 실효 적용 중 ({caseData.expungement.reason})</span>
               ) : caseData.expungement.daysRemaining !== undefined ? (
@@ -385,16 +385,16 @@ export default function CourtCaseEditPage() {
         </div>
 
         <form onSubmit={handleExecutionSave} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                 형집행 상태 <span className="text-rose-500">*</span>
               </label>
               <select
                 value={executionStatus}
                 onChange={(e) => setExecutionStatus(e.target.value)}
                 required
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">집행 상태를 선택하세요</option>
                 <option value="집행 전">집행 전 (영장 대기/미집행)</option>
@@ -407,20 +407,20 @@ export default function CourtCaseEditPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                 집행(완료/개시) 일자
               </label>
               <input
                 value={executionDate}
                 onChange={(e) => setExecutionDate(e.target.value)}
                 type="date"
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
               형집행 세부 비고사항
             </label>
             <textarea
@@ -428,44 +428,44 @@ export default function CourtCaseEditPage() {
               onChange={(e) => setExecutionNotes(e.target.value)}
               rows={2}
               placeholder="예: 서울남부교도소 이감 완료 / 벌금 500만원 전액 납부 확인"
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
           </div>
 
           {/* 수동 실효 토글 */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-3">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-3">
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
                 id="isExpunged"
                 checked={isExpunged}
                 onChange={(e) => setIsExpunged(e.target.checked)}
-                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 rounded border-slate-300 dark:border-slate-700 focus:ring-blue-500"
               />
-              <label htmlFor="isExpunged" className="text-xs font-bold text-slate-800 cursor-pointer">
+              <label htmlFor="isExpunged" className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer">
                 ⚖️ 법원 직권 수동 실효 처리 (체크 시 대국민 검색에서 즉시 비공개)
               </label>
             </div>
 
             {isExpunged && (
               <div>
-                <label className="block text-[11px] text-slate-500 mb-1">실효 사유 (선택)</label>
+                <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">실효 사유 (선택)</label>
                 <input
                   value={expungedReason}
                   onChange={(e) => setExpungedReason(e.target.value)}
                   type="text"
                   placeholder="예: 특별사면 / 법 제72조에 따른 실효 / 법원 직권 말소"
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             )}
           </div>
 
-          <div className="pt-2">
+          <div className="pt-1">
             <button
               type="submit"
               disabled={savingExecution}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all disabled:opacity-50"
+              className="w-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all disabled:opacity-50"
             >
               {savingExecution ? "저장 중..." : "🔒 형집행 사실 및 실효 설정 저장"}
             </button>

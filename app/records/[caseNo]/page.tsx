@@ -37,22 +37,22 @@ interface CaseDetail {
 
 function SectionCard({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 mb-6">
-      <div className="flex items-center gap-2 pb-4 mb-4 border-b border-slate-100">
-        <span className="text-lg">{icon}</span>
-        <h2 className="font-bold text-slate-900 text-base">{title}</h2>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xs p-4 sm:p-6 mb-5 sm:mb-6">
+      <div className="flex items-center gap-2 pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-100 dark:border-slate-800">
+        <span className="text-base sm:text-lg">{icon}</span>
+        <h2 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">{title}</h2>
       </div>
-      <div className="space-y-3">{children}</div>
+      <div className="space-y-2.5 sm:space-y-3">{children}</div>
     </div>
   );
 }
 
 function DataRow({ label, value, highlight }: { label: string; value?: string | null; highlight?: boolean }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-slate-50 last:border-0 gap-1 text-sm">
-      <span className="text-slate-500 font-medium text-xs sm:text-sm">{label}</span>
-      <span className={`font-semibold ${highlight ? "text-blue-600 font-mono text-base" : "text-slate-800"}`}>
-        {value || <span className="text-slate-300 font-normal">-</span>}
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between py-1.5 sm:py-2 border-b border-slate-50 dark:border-slate-800/60 last:border-0 gap-0.5 sm:gap-1 text-xs sm:text-sm">
+      <span className="text-slate-500 dark:text-slate-400 font-medium">{label}</span>
+      <span className={`font-semibold ${highlight ? "text-blue-600 dark:text-blue-400 font-mono text-sm sm:text-base" : "text-slate-800 dark:text-slate-200"}`}>
+        {value || <span className="text-slate-300 dark:text-slate-600 font-normal">-</span>}
       </span>
     </div>
   );
@@ -113,33 +113,31 @@ export default async function RecordDetailPage({
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <a
           href="/search"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-lg shadow-2xs transition-colors"
         >
           ← 검색 목록으로 돌아가기
         </a>
       </div>
 
       {/* 사건 타이틀 카드 */}
-      <div className="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white shadow-md mb-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="bg-blue-600 text-white font-mono text-xs font-bold px-3 py-1 rounded-md border border-blue-400/30">
-              최신 대표 사건번호: {c.displayCaseNo}
-            </span>
-          </div>
+      <div className="bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-slate-950 dark:to-slate-900 rounded-2xl p-5 sm:p-8 text-white shadow-md mb-5 sm:mb-6 border border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <span className="bg-blue-600 text-white font-mono text-xs font-bold px-3 py-1 rounded-md border border-blue-400/30">
+            최신 대표 사건번호: {c.displayCaseNo}
+          </span>
           <span className="text-slate-300 text-xs">
-            접수일: {c.bookingDate ? c.bookingDate.slice(0, 10) : "-"}
+            접수: {c.bookingDate ? c.bookingDate.slice(0, 10) : "-"}
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mt-2">
+        <h1 className="text-xl sm:text-3xl font-bold text-white mt-2">
           {c.suspectName}{" "}
-          <span className="text-slate-400 text-lg font-normal">관련 사건 기록</span>
+          <span className="text-slate-400 text-base sm:text-lg font-normal">관련 사건 기록</span>
         </h1>
-        <p className="text-slate-300 text-sm mt-1">죄명: {c.chargeName || "미기재"}</p>
+        <p className="text-slate-300 text-xs sm:text-sm mt-1">죄명: {c.chargeName || "미기재"}</p>
       </div>
 
       {/* 기본 정보 */}
@@ -154,16 +152,16 @@ export default async function RecordDetailPage({
 
       {/* 재판 결과 및 판결문 */}
       <SectionCard title="법원 재판 및 판결문" icon="⚖️">
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {/* 1심 */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-slate-700">1심 (지방법원)</span>
-              <span className="font-mono text-xs text-slate-500">{c.court1No || "사건번호 미기재"}</span>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">1심 (지방법원)</span>
+              <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{c.court1No || "사건번호 미기재"}</span>
             </div>
             <DataRow label="1심 선고 결과" value={c.court1Result} />
             {c.court1Doc ? (
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex justify-end">
+              <div className="mt-2.5 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex justify-end">
                 <a
                   href={c.court1Doc}
                   target="_blank"
@@ -174,19 +172,19 @@ export default async function RecordDetailPage({
                 </a>
               </div>
             ) : (
-              <p className="text-[11px] text-slate-400 text-right mt-1">등록된 판결문 링크 없음</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 text-right mt-1">등록된 판결문 링크 없음</p>
             )}
           </div>
 
           {/* 2심 */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-slate-700">2심 (고등법원 항소심)</span>
-              <span className="font-mono text-xs text-slate-500">{c.court2No || "사건번호 미기재"}</span>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">2심 (고등법원 항소심)</span>
+              <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{c.court2No || "사건번호 미기재"}</span>
             </div>
             <DataRow label="2심 선고 결과" value={c.court2Result} />
             {c.court2Doc ? (
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex justify-end">
+              <div className="mt-2.5 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex justify-end">
                 <a
                   href={c.court2Doc}
                   target="_blank"
@@ -197,19 +195,19 @@ export default async function RecordDetailPage({
                 </a>
               </div>
             ) : (
-              <p className="text-[11px] text-slate-400 text-right mt-1">등록된 판결문 링크 없음</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 text-right mt-1">등록된 판결문 링크 없음</p>
             )}
           </div>
 
           {/* 3심 */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-slate-700">3심 (대법원 상고심)</span>
-              <span className="font-mono text-xs text-slate-500">{c.court3No || "사건번호 미기재"}</span>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">3심 (대법원 상고심)</span>
+              <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{c.court3No || "사건번호 미기재"}</span>
             </div>
             <DataRow label="3심 선고 결과" value={c.court3Result} />
             {c.court3Doc ? (
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex justify-end">
+              <div className="mt-2.5 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex justify-end">
                 <a
                   href={c.court3Doc}
                   target="_blank"
@@ -220,7 +218,7 @@ export default async function RecordDetailPage({
                 </a>
               </div>
             ) : (
-              <p className="text-[11px] text-slate-400 text-right mt-1">등록된 판결문 링크 없음</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 text-right mt-1">등록된 판결문 링크 없음</p>
             )}
           </div>
         </div>
