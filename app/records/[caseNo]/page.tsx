@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
-import { toCamel, toPublicCase } from "@/lib/utils";
+import { toCamel, toPublicCase, isPubliclyDisclosableCase } from "@/lib/utils";
 
 interface ExpungementInfo {
   isExpunged: boolean;
@@ -86,7 +86,14 @@ async function getCaseDetail(caseNo: string): Promise<CaseDetail | null> {
     }
 
     const raw = toCamel(result.rows[0] as Record<string, unknown>);
-    return toPublicCase(raw) as CaseDetail;
+    if (!isPubliclyDisclosableCase(raw)) {
+      return null;
+    }
+    const pub = toPublicCase(raw) as CaseDetail;
+    if (pub.expungement?.isExpunged) {
+      return null;
+    }
+    return pub;
   } catch (e) {
     console.error("[getCaseDetail error]", e);
     return null;

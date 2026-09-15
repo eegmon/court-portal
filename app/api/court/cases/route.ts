@@ -20,6 +20,12 @@ export async function GET(req: NextRequest) {
   const offset = (page - 1) * limit;
 
   try {
+    const prefixFilter = `AND (
+      hyeongje_no LIKE '%형제%' OR hyeongje_no LIKE '%특형%' OR hyeongje_no LIKE '%특공%'
+      OR latest_hyeongje_no LIKE '%형제%' OR latest_hyeongje_no LIKE '%특형%' OR latest_hyeongje_no LIKE '%특공%'
+      OR court1_no != '' OR court2_no != '' OR court3_no != ''
+    )`;
+
     const whereClause = q
       ? `AND (
           suspect_name LIKE ? OR hyeongje_no LIKE ? OR suje_no LIKE ?
@@ -40,6 +46,7 @@ export async function GET(req: NextRequest) {
                    booking_date, created_at
             FROM cases
             WHERE deleted_at = ''
+              ${prefixFilter}
               ${whereClause}
             ORDER BY booking_date DESC
             LIMIT ? OFFSET ?`,
@@ -47,7 +54,7 @@ export async function GET(req: NextRequest) {
     });
 
     const countResult = await db.execute({
-      sql: `SELECT COUNT(*) as cnt FROM cases WHERE deleted_at = '' ${whereClause}`,
+      sql: `SELECT COUNT(*) as cnt FROM cases WHERE deleted_at = '' ${prefixFilter} ${whereClause}`,
       args: q ? [`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`] : [],
     });
 

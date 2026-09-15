@@ -7,7 +7,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { toCamel, toPublicCase, uuidv4 } from "@/lib/utils";
+import { toCamel, toPublicCase, isPubliclyDisclosableCase, uuidv4 } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   const nickname = req.nextUrl.searchParams.get("nickname")?.trim();
@@ -37,10 +37,12 @@ export async function GET(req: NextRequest) {
       args: [`%${nickname}%`],
     });
 
-    // 공개 사건 목록 변환 및 형의 실효(제72조) 적용 건은 대국민 조회에서 제외
-    const allCases = result.rows.map((row) =>
-      toPublicCase(toCamel(row as Record<string, unknown>))
-    );
+    // 공개 사건 필터링: 수사 중/불기소 제외, 법원 기소 및 판결/집행 확정 건만 공개 (실효 전과 제외)
+    const disclosableRows = result.rows.map((row) =>
+      toCamel(row as Record<string, unknown>)
+    ).filter((row) => isPubliclyDisclosableCase(row));
+
+    const allCases = disclosableRows.map((row) => toPublicCase(row));
 
     // 실효되지 않은 유효 전과/사건만 대국민 공개
     const activeCases = allCases.filter((c) => !c.expungement.isExpunged);

@@ -5,7 +5,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { toCamel, toPublicCase } from "@/lib/utils";
+import { toCamel, toPublicCase, isPubliclyDisclosableCase } from "@/lib/utils";
 
 export async function GET(
   req: NextRequest,
@@ -42,7 +42,20 @@ export async function GET(
     }
 
     const raw = toCamel(result.rows[0] as Record<string, unknown>);
+    if (!isPubliclyDisclosableCase(raw)) {
+      return NextResponse.json(
+        { error: "공개 대상 사건이 아니거나 열람이 제한된 사건입니다." },
+        { status: 403 }
+      );
+    }
+
     const publicCase = toPublicCase(raw);
+    if (publicCase.expungement?.isExpunged) {
+      return NextResponse.json(
+        { error: "제72조(형의 실효)에 따라 실효되어 비공개 처리된 사건입니다." },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ case: publicCase });
   } catch (e) {

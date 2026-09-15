@@ -1,6 +1,6 @@
 /**
  * lib/utils.ts
- * 공통 유틸리티 (사건번호 우선순위 채번, 제72조 형의 실효 판정)
+ * 공통 유틸리티 (사건번호 우선순위 채번, 제72조 형의 실효 판정, 대국민 공개 대상 필터)
  */
 
 /** snake_case → camelCase 변환 */
@@ -123,6 +123,69 @@ export function calculateExpungement(c: Record<string, unknown>): ExpungementInf
     elapsedDays,
     daysRemaining: requiredDays - elapsedDays,
   };
+}
+
+/**
+ * 대국민 공개 대상 사건 판정
+ * 1. 검찰 사건번호가 '형제', '특형', '특공' 중 하나를 반드시 포함해야 함 (단순 수제/내사/압제는 비공개)
+ * 2. 수사 중인 사건이나 불기소(무혐의, 기소유예 등) 처분 사건은 제외 (법원 판결/선고/집행 완료 전과 또는 정식 기소 사건만 공개)
+ * 3. 제72조(형의 실효)로 실효된 전과는 제외
+ */
+export function isPubliclyDisclosableCase(c: Record<string, unknown>): boolean {
+  const hyeongjeNo = String(c.latestHyeongjeNo || c.hyeongjeNo || "").trim();
+
+  // 1. 검찰 사건번호가 '형제', '특형', '특공'인 경우에만 통과 (수제/내사/압제 등은 제외)
+  const isValidProsecutionNo = ["형제", "특형", "특공"].some((prefix) =>
+    hyeongjeNo.includes(prefix)
+  );
+
+  if (!isValidProsecutionNo) {
+    return false;
+  }
+
+  const disposition = String(c.disposition || c.bookingStatus || "");
+  const hasCourtVerdict = Boolean(
+    c.court1Result || c.court2Result || c.court3Result || c.executionStatus
+  );
+
+  // 2. 법원 재판 선고 결과 또는 형집행 기록이 있는 사건은 공개 대상
+  if (hasCourtVerdict) {
+    return true;
+  }
+
+  // 3. 법원 선고 기록이 없는 상태에서 수사 중이거나 불기소(무혐의, 기소유예 등) 처분된 사건은 비공개
+  const isNonIndictmentOrInvestigating = [
+    "불기소",
+    "혐의없음",
+    "무혐의",
+    "기소유예",
+    "공소권없음",
+    "죄가안됨",
+    "기소중지",
+    "참고인중지",
+    "각하",
+    "타관 이송",
+    "수사 진행",
+    "수사진행",
+    "입건",
+    "진행 중",
+    "청구 중",
+  ].some((kw) => disposition.includes(kw));
+
+  if (isNonIndictmentOrInvestigating) {
+    return false;
+  }
+
+  // 4. 법원에 정식 기소된 사건 (구속기소, 불구속기소, 구공판, 약식명령)
+  const isFormallyIndicted = [
+    "기소",
+    "구공판",
+    "약식명령",
+    "약식기소",
+    "공판",
+  ].some((kw) => disposition.includes(kw));
+
+  return isFormallyIndicted;
 }
 
 /** 공개용 사건 정보 추출 (대표 사건번호 + 판결문 링크 + 실효 정보 포함) */
