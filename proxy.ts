@@ -6,7 +6,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_COURT_PATHS = ["/court/login"];
+const PUBLIC_COURT_PATHS = ["/court/login", "/court/register"];
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

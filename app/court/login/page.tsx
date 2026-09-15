@@ -89,7 +89,13 @@ export default function CourtLoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-slate-100 text-center">
+        <div className="mt-6 pt-6 border-t border-slate-100 text-center space-y-2">
+          <p className="text-xs text-slate-600">
+            아직 법원 계정이 없으신가요?{" "}
+            <a href="/court/register" className="text-blue-600 font-bold hover:underline">
+              계정 생성하기 →
+            </a>
+          </p>
           <p className="text-[11px] text-slate-400">
             계정 발급 및 비밀번호 분실은 사법전산 담당자에게 문의 바랍니다.
           </p>

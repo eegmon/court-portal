@@ -1,0 +1,210 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function CourtRegisterPage() {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [role, setRole] = useState("JUDGE");
+  const [dept, setDept] = useState("");
+  const [joinCode, setJoinCode] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (password !== passwordConfirm) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/court/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          loginId,
+          password,
+          role,
+          dept,
+          joinCode,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setSuccess("계정이 성공적으로 등록되었습니다! 로그인 페이지로 이동합니다...");
+      setTimeout(() => {
+        router.push("/court/login");
+      }, 1500);
+    } catch (e) {
+      setError((e as Error).message || "가입 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="max-w-md mx-auto py-8">
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-lg p-8">
+        <div className="text-center mb-6">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl mx-auto mb-3 shadow-inner">
+            🏛️
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900">법원 공무원 계정 생성</h1>
+          <p className="text-xs text-slate-400 mt-1">
+            판사 및 법원 공무원 업무망 계정을 등록합니다.
+          </p>
+        </div>
+
+        {error && (
+          <div className="bg-rose-50 border border-rose-200 text-rose-700 rounded-xl p-3 text-xs mb-4 flex items-center gap-2">
+            <span>⚠️</span>
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl p-3 text-xs mb-4 flex items-center gap-2">
+            <span>✅</span>
+            <span>{success}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">
+              성명 / 직책 호칭 <span className="text-rose-500">*</span>
+            </label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              required
+              placeholder="예: 홍길동 판사 / 김서기"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">
+              공무원 아이디 (로그인용) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              value={loginId}
+              onChange={(e) => setLoginId(e.target.value)}
+              type="text"
+              required
+              autoComplete="username"
+              placeholder="아이디를 입력하세요"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                비밀번호 <span className="text-rose-500">*</span>
+              </label>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                required
+                autoComplete="new-password"
+                placeholder="4자 이상"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+              />
+            </div>
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                비밀번호 확인 <span className="text-rose-500">*</span>
+              </label>
+              <input
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                type="password"
+                required
+                autoComplete="new-password"
+                placeholder="비밀번호 재입력"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                직무 역할 <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+              >
+                <option value="JUDGE">판사 (재판 선고 및 판결)</option>
+                <option value="COURT_CLERK">법원 서기 / 참여관</option>
+                <option value="CHIEF_JUDGE">부장판사 / 법원장</option>
+                <option value="COURT_ADMIN">법원사무관 / 행정관</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                소속 재판부 / 부서
+              </label>
+              <input
+                value={dept}
+                onChange={(e) => setDept(e.target.value)}
+                type="text"
+                placeholder="예: 형사1단독 / 형사항소2부"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 mb-1">
+              가입 코드 (최초 관리자 등록 시 입력)
+            </label>
+            <input
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              type="text"
+              placeholder="최초 부트스트랩 코드 (예: 1234)"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-xs"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-600/20 hover:shadow-lg transition-all active:scale-98 disabled:opacity-50 mt-4"
+          >
+            {loading ? "계정 생성 중..." : "법원 공무원 계정 생성"}
+          </button>
+        </form>
+
+        <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+          <p className="text-xs text-slate-500">
+            이미 계정이 있으신가요?{" "}
+            <a href="/court/login" className="text-blue-600 font-bold hover:underline">
+              로그인하기 →
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

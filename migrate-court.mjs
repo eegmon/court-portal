@@ -34,6 +34,9 @@ async function init() {
     "execution_notes TEXT DEFAULT ''",
     "execution_updated_by TEXT DEFAULT ''",
     "execution_updated_at TEXT DEFAULT ''",
+    "is_expunged INTEGER DEFAULT 0",
+    "expunged_at TEXT DEFAULT ''",
+    "expunged_reason TEXT DEFAULT ''",
   ];
   for (const col of executionColumns) {
     try {
