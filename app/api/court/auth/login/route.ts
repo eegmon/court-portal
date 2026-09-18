@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const result = await db.execute({
-      sql: `SELECT * FROM court_users WHERE login_id = ? AND status = 'ACTIVE' LIMIT 1`,
+      sql: `SELECT * FROM court_users WHERE login_id = ? LIMIT 1`,
       args: [loginId],
     });
 
@@ -40,6 +40,39 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "아이디 또는 비밀번호가 올바르지 않습니다." },
         { status: 401 }
+      );
+    }
+
+    // 계정 승인 상태 확인
+    const userStatus = String(user.status || "ACTIVE");
+    if (userStatus === "PENDING") {
+      return NextResponse.json(
+        {
+          error:
+            "공무원 가입 승인 대기 중입니다. 관리자의 승인 완료 후 로그인하실 수 있습니다.",
+          status: "PENDING",
+        },
+        { status: 403 }
+      );
+    }
+    if (userStatus === "REJECTED") {
+      return NextResponse.json(
+        {
+          error:
+            "가입 신청이 반려된 계정입니다. 법원 행정처 또는 시스템 관리자에게 문의하세요.",
+          status: "REJECTED",
+        },
+        { status: 403 }
+      );
+    }
+    if (userStatus === "INACTIVE") {
+      return NextResponse.json(
+        {
+          error:
+            "현재 정지(비활성화)된 계정입니다. 관리자에게 문의하세요.",
+          status: "INACTIVE",
+        },
+        { status: 403 }
       );
     }
 

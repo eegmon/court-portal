@@ -45,6 +45,15 @@ export default function CourtDashboardPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 사용자 정보 및 관리자 여부
+  const [currentUser, setCurrentUser] = useState<{
+    name?: string;
+    role?: string;
+    dept?: string;
+    isAdmin?: boolean;
+  } | null>(null);
+  const [pendingUserCount, setPendingUserCount] = useState(0);
+
   // 판결문 빠른 첨부 모달 상태
   const [attachModalCase, setAttachModalCase] = useState<CaseRow | null>(null);
   const [court1DocInput, setCourt1DocInput] = useState("");
@@ -76,6 +85,17 @@ export default function CourtDashboardPage() {
 
   useEffect(() => {
     fetchCases(1, "");
+
+    // 사용자 정보 및 권한 불러오기
+    fetch("/api/court/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user) {
+          setCurrentUser(data.user);
+          setPendingUserCount(data.pendingCount || 0);
+        }
+      })
+      .catch(() => {});
   }, [fetchCases]);
 
   function handleSearch(e: React.FormEvent) {
@@ -162,18 +182,39 @@ export default function CourtDashboardPage() {
             <span className="bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 text-xs font-bold px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
               법원 공무원 전산망
             </span>
+            {currentUser?.name && (
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {currentUser.name} 님 ({currentUser.dept || "법원"})
+              </span>
+            )}
             <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">사건 판결 및 형 실효 관리</h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             법원 사건번호 채번, 1~3심 판결문 링크 첨부 및 제72조(형의 실효) 사실을 관리합니다.
           </p>
         </div>
-        <button
-          onClick={handleLogout}
-          className="self-start sm:self-center text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 px-3 py-1.5 rounded-lg transition-colors"
-        >
-          안전 로그아웃
-        </button>
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+          {currentUser?.isAdmin && (
+            <a
+              href="/court/admin/users"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/70 hover:bg-purple-100 border border-purple-200 dark:border-purple-800 px-3 py-1.5 rounded-xl transition-all shadow-2xs"
+            >
+              <span>👥</span>
+              <span>공무원 가입/계정 관리</span>
+              {pendingUserCount > 0 && (
+                <span className="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full animate-bounce">
+                  {pendingUserCount}
+                </span>
+              )}
+            </a>
+          )}
+          <button
+            onClick={handleLogout}
+            className="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 px-3 py-1.5 rounded-xl transition-colors"
+          >
+            안전 로그아웃
+          </button>
+        </div>
       </div>
 
       {/* 검색 바 */}

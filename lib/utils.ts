@@ -218,6 +218,23 @@ export function toPublicCase(c: Record<string, unknown>) {
   };
 }
 
+/** 법원 공무원 직무 역할 정의 */
+export const COURT_ROLES = [
+  { value: "CHIEF_JUSTICE", label: "대법원장" },
+  { value: "SUPREME_COURT_JUSTICE", label: "대법관" },
+  { value: "SENIOR_JUDGE", label: "차장판사" },
+  { value: "JUDGE", label: "평판사" },
+  { value: "PROBATIONARY_JUDGE", label: "판사시보" },
+  { value: "COURT_ADMIN_SECRETARY", label: "법원사무처장" },
+  { value: "COURT_ADMIN", label: "법원사무관" },
+  { value: "COURT_CLERK", label: "법원주사 / 서기" },
+] as const;
+
+export function getCourtRoleLabel(role: string): string {
+  const found = COURT_ROLES.find((r) => r.value === role);
+  return found ? found.label : role || "미지정";
+}
+
 /** UUID v4 생성 */
 export function uuidv4(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
@@ -225,3 +242,4 @@ export function uuidv4(): string {
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
 }
+

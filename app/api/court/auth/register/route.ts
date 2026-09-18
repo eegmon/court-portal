@@ -40,17 +40,17 @@ export async function POST(req: NextRequest) {
     const isFirstUser = totalUsers === 0;
     const isBootstrapMatch = joinCode && joinCode.trim() === bootstrapSecret;
 
-    // 가입 승인 검증: 첫 계정이거나, 관리자가 추가하거나, 가입 코드가 일치하거나, 공개 가입 허용
-    // (가상서버 환경에서 원활한 테스팅을 위해 가입 지원)
+    // 가입 승인 검증: 첫 계정이거나 부트스트랩 코드가 일치하면 즉시 ACTIVE 및 관리자 권한
     let assignedRole = role || "COURT_CLERK";
     let isUserAdmin = isFirstUser || (isBootstrapMatch ? 1 : 0);
+    let initialStatus = isFirstUser || isBootstrapMatch ? "ACTIVE" : "PENDING";
 
     const hashed = await bcrypt.hash(password, 12);
     const id = uuidv4();
 
     await db.execute({
       sql: `INSERT INTO court_users (id, name, login_id, password, role, dept, is_admin, status, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', datetime('now'))`,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
       args: [
         id,
         name.trim(),
@@ -59,15 +59,19 @@ export async function POST(req: NextRequest) {
         assignedRole,
         dept?.trim() || "",
         isUserAdmin,
+        initialStatus,
       ],
     });
 
     return NextResponse.json({
       ok: true,
       id,
+      isPending: initialStatus === "PENDING",
       message: isFirstUser
-        ? "최초 관리자 계정으로 등록되었습니다."
-        : "법원 공무원 계정이 등록되었습니다.",
+        ? "최초 관리자 계정으로 즉시 등록되었습니다."
+        : isBootstrapMatch
+        ? "관리자 인증 코드로 계정이 즉시 활성화되었습니다."
+        : "공무원 가입 신청이 성공적으로 접수되었습니다. 관리자 승인 후 로그인할 수 있습니다.",
     });
   } catch (e) {
     const msg = String((e as Error).message || e);
